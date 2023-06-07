@@ -51,6 +51,18 @@ AProjectPFCharacter::AProjectPFCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AProjectPFCharacter::Jump()
+{
+}
+
+void AProjectPFCharacter::Move2(const FInputActionValue& Value)
+{
+}
+
+void AProjectPFCharacter::Look2(const FInputActionValue& Value)
+{
+}
+
 void AProjectPFCharacter::BeginPlay()
 {
 	// Call the base class  

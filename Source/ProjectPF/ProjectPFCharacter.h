@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Character/ICharacter.h"
 #include "ProjectPFCharacter.generated.h"
 
 
 UCLASS(config=Game)
-class AProjectPFCharacter : public ACharacter
+class AProjectPFCharacter : public ACharacter, public IICharacter
 {
 	GENERATED_BODY()
 
@@ -39,6 +40,10 @@ class AProjectPFCharacter : public ACharacter
 
 public:
 	AProjectPFCharacter();
+
+	virtual void Jump() override;
+	virtual void Move2(const FInputActionValue& Value) override;
+	virtual void Look2(const FInputActionValue& Value) override;
 	
 
 protected:
