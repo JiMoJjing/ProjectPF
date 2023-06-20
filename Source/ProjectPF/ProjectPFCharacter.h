@@ -44,7 +44,7 @@ public:
 	virtual void Jump() override;
 	virtual void Move2(const FInputActionValue& Value) override;
 	virtual void Look2(const FInputActionValue& Value) override;
-	
+	virtual void StopJumping() override;
 
 protected:
 

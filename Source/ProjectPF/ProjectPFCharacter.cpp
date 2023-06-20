@@ -53,6 +53,8 @@ AProjectPFCharacter::AProjectPFCharacter()
 
 void AProjectPFCharacter::Jump()
 {
+	bPressedJump = true;
+	JumpKeyHoldTime = 0.0f;
 }
 
 void AProjectPFCharacter::Move2(const FInputActionValue& Value)
@@ -61,6 +63,12 @@ void AProjectPFCharacter::Move2(const FInputActionValue& Value)
 
 void AProjectPFCharacter::Look2(const FInputActionValue& Value)
 {
+}
+
+void AProjectPFCharacter::StopJumping()
+{
+	bPressedJump = false;
+	ResetJumpState();
 }
 
 void AProjectPFCharacter::BeginPlay()
@@ -87,8 +95,8 @@ void AProjectPFCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AProjectPFCharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AProjectPFCharacter::StopJumping);
 
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjectPFCharacter::Move);

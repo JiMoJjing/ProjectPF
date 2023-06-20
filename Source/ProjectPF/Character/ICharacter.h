@@ -19,4 +19,5 @@ public:
 	virtual void Move2(const FInputActionValue& Value) = 0;
 	virtual void Look2(const FInputActionValue& Value) = 0;
 	virtual void Jump() = 0;
+	virtual void StopJumping() = 0;
 };
