@@ -54,9 +54,13 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> Body(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn.SKM_Quinn'"));
 	if(Body.Succeeded())
 		GetMesh()->SetSkeletalMeshAsset(Body.Object);
-	ConstructorHelpers::FClassFinder<UAnimInstance> Anim(TEXT("/Script/Engine.AnimBlueprint'/Game/Characters/Mannequins/Animations/ABP_Quinn.ABP_Quinn'"));
+	/*TSubclassOf<UAnimInstance> animinstance;
+	ConstructorHelpers::FClassFinder<UAnimInstance> Anim(TEXT("/Script/Engine.AnimBlueprint'/Game/Characters/Mannequins/Animations/ABP_Quinn.ABP_Quinn_C'"));
 	if (Anim.Succeeded())
-		GetMesh()->SetAnimInstanceClass(Anim.Class);
+	{
+		animinstance = Anim.Class;
+		GetMesh()->SetAnimInstanceClass(animinstance);
+	}*/
 }
 
 void ACPlayableCharacterBase::BeginPlay()

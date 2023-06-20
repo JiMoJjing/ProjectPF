@@ -36,7 +36,7 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 		class UInputAction* LookAction;
 
 public:
-	ACPlayableCharacterBase();
+	ACPlayableCharacterBase();	
 
 protected:
 
