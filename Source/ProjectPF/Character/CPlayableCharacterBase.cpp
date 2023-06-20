@@ -1,6 +1,5 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ProjectPFCharacter.h"
+#include "Character/CPlayableCharacterBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,16 +8,16 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "UObject/ConstructorHelpers.h"
 
 
-//////////////////////////////////////////////////////////////////////////
-// AProjectPFCharacter
-
-AProjectPFCharacter::AProjectPFCharacter()
+ACPlayableCharacterBase::ACPlayableCharacterBase()
 {
+	// Tick
+	PrimaryActorTick.bCanEverTick = true;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -47,60 +46,57 @@ AProjectPFCharacter::AProjectPFCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
+	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> Body(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn.SKM_Quinn'"));
+	if(Body.Succeeded())
+		GetMesh()->SetSkeletalMeshAsset(Body.Object);
+	ConstructorHelpers::FClassFinder<UAnimInstance> Anim(TEXT("/Script/Engine.AnimBlueprint'/Game/Characters/Mannequins/Animations/ABP_Quinn.ABP_Quinn'"));
+	if (Anim.Succeeded())
+		GetMesh()->SetAnimInstanceClass(Anim.Class);
 }
 
-void AProjectPFCharacter::Jump()
+void ACPlayableCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	// Set up action bindings
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
+
+		//Jumping
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::StopJumping);
+
+		//Moving
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Move);
+
+		//Looking
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Look);
+
+	}
+}
+
+void ACPlayableCharacterBase::Jump()
 {
 	bPressedJump = true;
 	JumpKeyHoldTime = 0.0f;
 }
 
-void AProjectPFCharacter::StopJumping()
+void ACPlayableCharacterBase::StopJumping()
 {
 	bPressedJump = false;
 	ResetJumpState();
 }
 
-void AProjectPFCharacter::BeginPlay()
-{
-	// Call the base class  
-	Super::BeginPlay();
-
-	//Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Input
-
-void AProjectPFCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
-		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AProjectPFCharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AProjectPFCharacter::StopJumping);
-
-		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjectPFCharacter::Move);
-
-		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AProjectPFCharacter::Look);
-
-	}
-
-}
-
-void AProjectPFCharacter::Move(const FInputActionValue& Value)
+void ACPlayableCharacterBase::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -113,7 +109,7 @@ void AProjectPFCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
+
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -123,7 +119,7 @@ void AProjectPFCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void AProjectPFCharacter::Look(const FInputActionValue& Value)
+void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -136,6 +132,10 @@ void AProjectPFCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void ACPlayableCharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 
+}
 
 
