@@ -51,9 +51,11 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> Body(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn.SKM_Quinn'"));
+	
+	// C++에서 직접 skeletal mesh와 anim blueprint 를 참조하는걸 지양하는듯?
+	/*ConstructorHelpers::FObjectFinder<USkeletalMesh> Body(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn.SKM_Quinn'"));
 	if(Body.Succeeded())
-		GetMesh()->SetSkeletalMeshAsset(Body.Object);
+		GetMesh()->SetSkeletalMeshAsset(Body.Object);*/
 	/*TSubclassOf<UAnimInstance> animinstance;
 	ConstructorHelpers::FClassFinder<UAnimInstance> Anim(TEXT("/Script/Engine.AnimBlueprint'/Game/Characters/Mannequins/Animations/ABP_Quinn.ABP_Quinn_C'"));
 	if (Anim.Succeeded())
