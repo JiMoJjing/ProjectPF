@@ -70,18 +70,19 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 		GetMesh()->SetAnimInstanceClass(animinstance);
 	}*/
 
-	if (IsValid(CharacterBaseDataAsset))
-	{
-		GetMesh()->SetSkeletalMeshAsset(CharacterBaseDataAsset->SkeletalMesh);
-		GetMesh()->SetRelativeTransform(CharacterBaseDataAsset->Mesh);
-		GetMesh()->SetAnimInstanceClass(CharacterBaseDataAsset->AnimInstanceClass);
-	}
 }
 
 void ACPlayableCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (IsValid(CharacterBaseDataAsset))
+	{
+		GetMesh()->SetSkeletalMeshAsset(CharacterBaseDataAsset->SkeletalMesh);
+		GetMesh()->SetRelativeTransform(CharacterBaseDataAsset->Mesh);
+		GetMesh()->SetAnimInstanceClass(CharacterBaseDataAsset->AnimInstanceClass);
+	}
+
 }
 
 void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
