@@ -31,9 +31,15 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* MoveAction;
 
-	/** Look Input Action */
+	/** Look Input Action */ 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LookAction;
+
+protected:
+	/** DataAsset */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets")
+		class UCDA_CharacterBase* CharacterBaseDataAsset;
+
 
 public:
 	ACPlayableCharacterBase();	

@@ -1,14 +1,20 @@
 
 #include "Character/CPlayableCharacterBase.h"
+
 #include "Camera/CameraComponent.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+
 #include "UObject/ConstructorHelpers.h"
+#include "Character/CharacterDataAssets/CDA_CharacterBase.h"
 
 
 ACPlayableCharacterBase::ACPlayableCharacterBase()
@@ -31,7 +37,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MaxWalkSpeed = 2000.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
@@ -46,8 +52,8 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
-	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
+	//GetMesh()->SetRelativeLocation(FVector(0, 0, -90));
+	//GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -63,6 +69,13 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 		animinstance = Anim.Class;
 		GetMesh()->SetAnimInstanceClass(animinstance);
 	}*/
+
+	if (IsValid(CharacterBaseDataAsset))
+	{
+		GetMesh()->SetSkeletalMeshAsset(CharacterBaseDataAsset->SkeletalMesh);
+		GetMesh()->SetRelativeTransform(CharacterBaseDataAsset->Mesh);
+		GetMesh()->SetAnimInstanceClass(CharacterBaseDataAsset->AnimInstanceClass);
+	}
 }
 
 void ACPlayableCharacterBase::BeginPlay()
