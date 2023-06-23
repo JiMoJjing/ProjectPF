@@ -12,9 +12,12 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Character/CharacterDataAssets/CDA_CharacterBase.h"
+
+#include "Utilities/CLog.h"
 
 
 ACPlayableCharacterBase::ACPlayableCharacterBase()
@@ -70,6 +73,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 		GetMesh()->SetAnimInstanceClass(animinstance);
 	}*/
 
+
 }
 
 void ACPlayableCharacterBase::BeginPlay()
@@ -78,11 +82,22 @@ void ACPlayableCharacterBase::BeginPlay()
 	
 	if (IsValid(CharacterBaseDataAsset))
 	{
+		// Transform
 		GetMesh()->SetSkeletalMeshAsset(CharacterBaseDataAsset->SkeletalMesh);
 		GetMesh()->SetRelativeTransform(CharacterBaseDataAsset->Mesh);
 		GetMesh()->SetAnimInstanceClass(CharacterBaseDataAsset->AnimInstanceClass);
 	}
 
+	//Add Input Mapping Context
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
+	ChangeBindingAction(JumpAction, FKey(TEXT("J")));
+	ChangeBindingAction(JumpAction, FKey(TEXT("RightMouseButton")));
 }
 
 void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -100,7 +115,6 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Look);
-
 	}
 }
 
@@ -152,10 +166,17 @@ void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
 	}
 }
 
+void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey InKey)
+{
+	DefaultMappingContext->UnmapAllKeysFromAction(InAction);
+	DefaultMappingContext->MapKey(InAction, InKey);
+}
+
+
+
 void ACPlayableCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 

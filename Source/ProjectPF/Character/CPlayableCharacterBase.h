@@ -35,6 +35,8 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* Test;
 protected:
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets")
@@ -45,7 +47,6 @@ public:
 	ACPlayableCharacterBase();	
 
 protected:
-
 	virtual void Jump() override;
 
 	virtual void StopJumping() override;
@@ -53,6 +54,8 @@ protected:
 	virtual void Move(const FInputActionValue& Value) override;
 
 	virtual void Look(const FInputActionValue& Value) override;
+
+	void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
 
 protected:
 	virtual void BeginPlay() override;

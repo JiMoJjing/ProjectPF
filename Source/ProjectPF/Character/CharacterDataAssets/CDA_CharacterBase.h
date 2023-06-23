@@ -31,20 +31,21 @@ class PROJECTPF_API UCDA_CharacterBase : public UDataAsset
 
 public:
 	//CameraBoom
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transform")
 		FTransform CameraBoom;
 	//FollowCamera
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transform")
 		FTransform FollowCamera;
 	//CameraBoom
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Transform")
 		FTransform Mesh;
 
 	//TSubclassOf<USkeletalMesh> 로 하려했는데 원하는데로 나오지 않는다. 이유가 뭘까?
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMesh")
-		USkeletalMesh* SkeletalMesh;
+		class USkeletalMesh* SkeletalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AnimInstance")
 		TSubclassOf<UAnimInstance> AnimInstanceClass;
+
 
 };
