@@ -96,8 +96,8 @@ void ACPlayableCharacterBase::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	ChangeBindingAction(JumpAction, FKey(TEXT("J")));
-	ChangeBindingAction(JumpAction, FKey(TEXT("RightMouseButton")));
+	ChangeBindingAction(JumpAction, FKey("J"));
+	ChangeBindingAction(JumpAction, FKey("RightMouseButton"));
 }
 
 void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -172,7 +172,12 @@ void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey I
 	DefaultMappingContext->MapKey(InAction, InKey);
 }
 
-
+void ACPlayableCharacterBase::Jump2(FKey PressedKey) 
+{
+	CLog::Print((PressedKey.ToString()));
+	bPressedJump = true;
+	JumpKeyHoldTime = 0.0f;
+}
 
 void ACPlayableCharacterBase::Tick(float DeltaTime)
 {

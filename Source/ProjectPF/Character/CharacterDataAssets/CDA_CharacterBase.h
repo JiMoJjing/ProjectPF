@@ -10,19 +10,6 @@
  * 
  */
 
-//USTRUCT(BlueprintType)
-//struct TransForm
-//{
-//	GENERATED_BODY()
-//		
-//public:
-//	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-//		FVector Location;
-//	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-//		FRotator Rotation;
-//	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-//		FVector Scale;
-//};
 
 UCLASS()
 class PROJECTPF_API UCDA_CharacterBase : public UDataAsset
@@ -49,3 +36,17 @@ public:
 
 
 };
+
+//USTRUCT(BlueprintType)
+//struct TransForm
+//{
+//	GENERATED_BODY()
+//		
+//public:
+//	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+//		FVector Location;
+//	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+//		FRotator Rotation;
+//	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+//		FVector Scale;
+//};
