@@ -40,7 +40,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 2000.f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
@@ -96,8 +96,11 @@ void ACPlayableCharacterBase::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	ChangeBindingAction(JumpAction, FKey("J"));
-	ChangeBindingAction(JumpAction, FKey("RightMouseButton"));
+
+	/*
+	if (IICharacter* interfacetest = Cast<IICharacter>(this))
+		interfacetest->Test_Implementation();
+	*/
 }
 
 void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -115,6 +118,10 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Look);
+
+		//LeftMouseClick
+		EnhancedInputComponent->BindAction(LeftMouseClickAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::LeftMouseClick);
+
 	}
 }
 
@@ -164,6 +171,16 @@ void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ACPlayableCharacterBase::LeftMouseClick()
+{
+	CLog::Print("Left Mouse Clicked!", 0, 5.f);
+}
+
+void ACPlayableCharacterBase::Test_Implementation()
+{
+	CLog::Print("TestSuccess");
 }
 
 void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey InKey)

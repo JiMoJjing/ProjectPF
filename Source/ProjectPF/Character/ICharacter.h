@@ -20,4 +20,8 @@ public:
 	virtual void Look(const FInputActionValue& Value) = 0;
 	virtual void Jump() = 0;
 	virtual void StopJumping() = 0;
+	virtual void LeftMouseClick() = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+		void Test();
 };

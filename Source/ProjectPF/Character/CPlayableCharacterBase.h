@@ -35,6 +35,10 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LookAction;
 
+	/** LeftMouseClick Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* LeftMouseClickAction;
+
 protected:
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets")
@@ -45,13 +49,21 @@ public:
 	ACPlayableCharacterBase();	
 
 protected:
-	virtual void Jump() override;
 
+	/** Jump 입력 액션시 호출 */
+	virtual void Jump() override;
 	virtual void StopJumping() override;
 
+	/** Move 입력 액션시 호출 */
 	virtual void Move(const FInputActionValue& Value) override;
 
+	/** Look 입력 액션시 호출 */
 	virtual void Look(const FInputActionValue& Value) override;
+
+	/** LeftMouseClick 입력 액션시 호출 */
+	virtual void LeftMouseClick() override;
+
+	void Test_Implementation() override;
 
 	UFUNCTION(BlueprintCallable)
 		void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
