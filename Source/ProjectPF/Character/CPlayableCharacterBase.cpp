@@ -14,10 +14,12 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 
+#include "Character/ActorComponents/CStateComponent.h"
+
 #include "UObject/ConstructorHelpers.h"
 #include "Character/CharacterDataAssets/CDA_CharacterBase.h"
 
-#include "Utilities/CLog.h"
+#include "Global.h"
 
 
 ACPlayableCharacterBase::ACPlayableCharacterBase()
@@ -40,7 +42,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	GetCharacterMovement()->MaxWalkSpeed = 200.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
@@ -73,6 +75,10 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 		GetMesh()->SetAnimInstanceClass(animinstance);
 	}*/
 
+	//ActorComponent
+	{
+		StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
+	}
 
 }
 
@@ -95,6 +101,11 @@ void ACPlayableCharacterBase::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	//DELEGATE Binding
+	{
+		StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
 	}
 
 	/*
@@ -122,6 +133,9 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 		//LeftMouseClick
 		EnhancedInputComponent->BindAction(LeftMouseClickAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::LeftMouseClick);
 
+		//LeftShift
+		EnhancedInputComponent->BindAction(LeftShiftAction, ETriggerEvent::Started, this, &ACPlayableCharacterBase::LeftShiftPressed);
+		EnhancedInputComponent->BindAction(LeftShiftAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::LeftShiftReleased);
 	}
 }
 
@@ -175,7 +189,42 @@ void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
 
 void ACPlayableCharacterBase::LeftMouseClick()
 {
-	CLog::Print("Left Mouse Clicked!", 0, 5.f);
+	//CLog::Print("Left Mouse Clicked!", 0, 5.f);
+}
+
+void ACPlayableCharacterBase::LeftShiftPressed()
+{
+	StateComponent->SetState(EPlayableCharacterState::Running);
+	CLog::Print("Pressed");
+}
+
+void ACPlayableCharacterBase::LeftShiftReleased()
+{
+	StateComponent->SetState(EPlayableCharacterState::Walking);
+	CLog::Print("Released");
+}
+
+void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState)
+{
+	switch (InNewState)
+	{
+	case EPlayableCharacterState::Idle: break;
+	case EPlayableCharacterState::Walking: SetWalkingMode(); break;
+	case EPlayableCharacterState::Running: SetRunningMode(); break;
+	case EPlayableCharacterState::Attacking: break;
+	case EPlayableCharacterState::Casting: break;
+	default: break;
+	}
+}
+
+void ACPlayableCharacterBase::SetWalkingMode()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 200.f;
+}
+
+void ACPlayableCharacterBase::SetRunningMode()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 }
 
 void ACPlayableCharacterBase::Test_Implementation()
@@ -199,6 +248,7 @@ void ACPlayableCharacterBase::Jump2(FKey PressedKey)
 void ACPlayableCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 

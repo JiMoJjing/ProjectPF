@@ -39,6 +39,15 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LeftMouseClickAction;
 
+	/** LeftShift Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* LeftShiftAction;
+
+protected:
+	/** CStateComponent */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents")
+		class UCStateComponent* StateComponent;
+
 protected:
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets")
@@ -63,7 +72,20 @@ protected:
 	/** LeftMouseClick 입력 액션시 호출 */
 	virtual void LeftMouseClick() override;
 
-	void Test_Implementation() override;
+	/** LeftShift 입력 액션시 호출 */
+	void LeftShiftPressed();
+	void LeftShiftReleased();
+
+	/** State의 델리게이트에 바인딩 할 함수 */
+	virtual void OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState) override;
+
+	/** State가 Walking이 되면 델리게이트로 실행 될 함수 */
+	virtual void SetWalkingMode() override;
+
+	/** State가 Running이 되면 델리게이트로 실행 될 함수 */
+	virtual void SetRunningMode() override;
+
+	virtual void Test_Implementation() override;
 
 	UFUNCTION(BlueprintCallable)
 		void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
