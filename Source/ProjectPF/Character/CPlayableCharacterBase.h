@@ -43,15 +43,20 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* LeftShiftAction;
 
-protected:
 	/** CStateComponent */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCStateComponent* StateComponent;
 
-protected:
 	/** DataAsset */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
 		class UCDA_CharacterBase* CharacterBaseDataAsset;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		bool bMove = false;
+protected:
+	/** Bind Key Change */
+	UFUNCTION(BlueprintCallable)
+		void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
 
 
 public:
@@ -66,6 +71,11 @@ protected:
 	/** Move 입력 액션시 호출 */
 	virtual void Move(const FInputActionValue& Value) override;
 
+	/** Move 입력 시작시 호출 */
+	void MoveStart();
+	/** Move 입력 종료시 호출 */
+	void MoveEnd();
+
 	/** Look 입력 액션시 호출 */
 	virtual void Look(const FInputActionValue& Value) override;
 
@@ -76,8 +86,8 @@ protected:
 	void LeftShiftPressed();
 	void LeftShiftReleased();
 
-	/** State의 델리게이트에 바인딩 할 함수 */
-	virtual void OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState) override;
+	/** Move 일 때 Walking 인지 Running 인지 체크해서 SetState(CStateComponent) 할 함수 */
+	void OnMoveState();
 
 	/** State가 Walking이 되면 델리게이트로 실행 될 함수 */
 	virtual void SetWalkingMode() override;
@@ -85,10 +95,17 @@ protected:
 	/** State가 Running이 되면 델리게이트로 실행 될 함수 */
 	virtual void SetRunningMode() override;
 
+	/** State의 델리게이트에 바인딩 할 함수 */
+	virtual void OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState) override;
+
+
 	virtual void Test_Implementation() override;
 
-	UFUNCTION(BlueprintCallable)
-		void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
+private:
+	/** WalkingSpeed와 RunningSpeed 인데 Status Component로 이식 할 것 */
+	float WalkingSpeed = 200.f;
+	float RunningSpeed = 600.f;
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -97,6 +114,5 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 	
-public:
-	void Jump2(FKey PressedKey);
+
 };

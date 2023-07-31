@@ -105,8 +105,11 @@ void ACPlayableCharacterBase::BeginPlay()
 
 	//DELEGATE Binding
 	{
-		StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
+		if(IsValid(StateComponent))
+			StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
 	}
+
+	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 
 	/*
 	if (IICharacter* interfacetest = Cast<IICharacter>(this))
@@ -126,6 +129,8 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Started, this, &ACPlayableCharacterBase::MoveStart);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::MoveEnd);
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Look);
@@ -172,6 +177,13 @@ void ACPlayableCharacterBase::Move(const FInputActionValue& Value)
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
+
+	//내가 추가한 코드
+	{
+		OnMoveState();
+		if (!bMove)
+			bMove = true;
+	}
 }
 
 void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
@@ -187,6 +199,19 @@ void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
 	}
 }
 
+void ACPlayableCharacterBase::MoveStart()
+{
+
+}
+
+void ACPlayableCharacterBase::MoveEnd()
+{
+	bMove = false;
+
+	if (IsValid(StateComponent))
+		StateComponent->SetState(EPlayableCharacterState::Idle);
+}
+
 void ACPlayableCharacterBase::LeftMouseClick()
 {
 	//CLog::Print("Left Mouse Clicked!", 0, 5.f);
@@ -194,14 +219,26 @@ void ACPlayableCharacterBase::LeftMouseClick()
 
 void ACPlayableCharacterBase::LeftShiftPressed()
 {
-	StateComponent->SetState(EPlayableCharacterState::Running);
-	CLog::Print("Pressed");
+	//Shift Pressed 시 Running 됨.
+	GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
+	CLog::Print("Pressed", 2, 1.f);
 }
 
 void ACPlayableCharacterBase::LeftShiftReleased()
 {
-	StateComponent->SetState(EPlayableCharacterState::Walking);
-	CLog::Print("Released");
+	//Shift Released 시 Walking 됨.
+	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+	CLog::Print("Released", 2, 1.f);
+}
+
+void ACPlayableCharacterBase::OnMoveState()
+{
+	float speed = GetCharacterMovement()->MaxWalkSpeed;
+
+	if (UKismetMathLibrary::NearlyEqual_FloatFloat(speed, WalkingSpeed, 1.f))
+		StateComponent->SetState(EPlayableCharacterState::Walking);
+	else if (UKismetMathLibrary::NearlyEqual_FloatFloat(speed, RunningSpeed, 1.f))
+		StateComponent->SetState(EPlayableCharacterState::Running);
 }
 
 void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState)
@@ -211,6 +248,7 @@ void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterSt
 	case EPlayableCharacterState::Idle: break;
 	case EPlayableCharacterState::Walking: SetWalkingMode(); break;
 	case EPlayableCharacterState::Running: SetRunningMode(); break;
+	case EPlayableCharacterState::Jumping: break;
 	case EPlayableCharacterState::Attacking: break;
 	case EPlayableCharacterState::Casting: break;
 	default: break;
@@ -219,12 +257,12 @@ void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterSt
 
 void ACPlayableCharacterBase::SetWalkingMode()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 200.f;
+	CLog::Print("Walking Mode Call", 4, 1.f, FColor::Red);
 }
 
 void ACPlayableCharacterBase::SetRunningMode()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	CLog::Print("Running Mode Call", 4, 1.f, FColor::Red);
 }
 
 void ACPlayableCharacterBase::Test_Implementation()
@@ -238,17 +276,10 @@ void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey I
 	DefaultMappingContext->MapKey(InAction, InKey);
 }
 
-void ACPlayableCharacterBase::Jump2(FKey PressedKey) 
-{
-	CLog::Print((PressedKey.ToString()));
-	bPressedJump = true;
-	JumpKeyHoldTime = 0.0f;
-}
 
 void ACPlayableCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 

@@ -10,7 +10,8 @@ enum class EPlayableCharacterState : uint8
 	Idle UMETA(DisplayName = "Idle"),
 	Walking UMETA(DisplayName = "Walking"),
 	Running UMETA(DisplayName = "Running"),
-	Attacking UMETA(DisplayName = "Attacking"),
+	Jumping UMETA(DisplayName = "Jumping"),
+	Attacking = 10 UMETA(DisplayName = "Attacking"),
 	Casting UMETA(DisplayName = "Casting")
 };
 
@@ -34,7 +35,7 @@ public:
 		FPlayableCharacterStateChanged OnStateChanged;
 
 private:
-	EPlayableCharacterState State;
+	EPlayableCharacterState State = EPlayableCharacterState::Idle;
 
 public:	
 	UCStateComponent();

@@ -2,7 +2,6 @@
 #include "Global.h"
 
 
-
 UCStateComponent::UCStateComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
