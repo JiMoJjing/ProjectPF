@@ -1,6 +1,8 @@
 #include "Character/ActorComponents/CStateComponent.h"
 #include "Global.h"
 
+#include "Character/CPlayableCharacterBase.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UCStateComponent::UCStateComponent()
 {
@@ -10,6 +12,7 @@ UCStateComponent::UCStateComponent()
 void UCStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	OwnerCharacter = Cast<ACPlayableCharacterBase>(GetOwner());
 }
 
 void UCStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -25,3 +28,6 @@ void UCStateComponent::SetState(EPlayableCharacterState InState)
 	if (OnStateChanged.IsBound())
 		OnStateChanged.Broadcast(prevState, State);
 }
+
+
+

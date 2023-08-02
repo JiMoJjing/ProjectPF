@@ -51,14 +51,14 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
 		class UCDA_CharacterBase* CharacterBaseDataAsset;
 
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		bool bMove = false;
 protected:
 	/** Bind Key Change */
 	UFUNCTION(BlueprintCallable)
 		void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
 
-
+	/** MovementMode Changed Delegate Binding Function*/
+	UFUNCTION(BlueprintCallable)
+		void MovementModeChangedBind(ACharacter* InCharacter, EMovementMode InPrevMovementMode, uint8 InPrevCustomMovementMode);
 public:
 	ACPlayableCharacterBase();	
 
@@ -87,7 +87,7 @@ protected:
 	void LeftShiftReleased();
 
 	/** Move 일 때 Walking 인지 Running 인지 체크해서 SetState(CStateComponent) 할 함수 */
-	void OnMoveState();
+	void OnMoveStateChanged();
 
 	/** State가 Walking이 되면 델리게이트로 실행 될 함수 */
 	virtual void SetWalkingMode() override;
@@ -101,11 +101,11 @@ protected:
 
 	virtual void Test_Implementation() override;
 
-private:
+public:
 	/** WalkingSpeed와 RunningSpeed 인데 Status Component로 이식 할 것 */
 	float WalkingSpeed = 200.f;
 	float RunningSpeed = 600.f;
-
+	bool bMove = false;
 
 protected:
 	virtual void BeginPlay() override;

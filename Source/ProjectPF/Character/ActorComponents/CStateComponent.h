@@ -37,6 +37,7 @@ public:
 private:
 	EPlayableCharacterState State = EPlayableCharacterState::Idle;
 
+	class ACPlayableCharacterBase* OwnerCharacter;
 public:	
 	UCStateComponent();
 

@@ -22,6 +22,7 @@
 #include "Global.h"
 
 
+
 ACPlayableCharacterBase::ACPlayableCharacterBase()
 {
 	// Tick
@@ -107,6 +108,8 @@ void ACPlayableCharacterBase::BeginPlay()
 	{
 		if(IsValid(StateComponent))
 			StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
+
+		MovementModeChangedDelegate.AddDynamic(this, &ACPlayableCharacterBase::MovementModeChangedBind);
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
@@ -180,7 +183,7 @@ void ACPlayableCharacterBase::Move(const FInputActionValue& Value)
 
 	//내가 추가한 코드
 	{
-		OnMoveState();
+		OnMoveStateChanged();
 		if (!bMove)
 			bMove = true;
 	}
@@ -201,15 +204,13 @@ void ACPlayableCharacterBase::Look(const FInputActionValue& Value)
 
 void ACPlayableCharacterBase::MoveStart()
 {
-
+	
 }
 
 void ACPlayableCharacterBase::MoveEnd()
 {
 	bMove = false;
-
-	if (IsValid(StateComponent))
-		StateComponent->SetState(EPlayableCharacterState::Idle);
+	OnMoveStateChanged();
 }
 
 void ACPlayableCharacterBase::LeftMouseClick()
@@ -221,18 +222,48 @@ void ACPlayableCharacterBase::LeftShiftPressed()
 {
 	//Shift Pressed 시 Running 됨.
 	GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
-	CLog::Print("Pressed", 2, 1.f);
+	CLog::Print("Shift Pressed", 2, 1.f);
 }
 
 void ACPlayableCharacterBase::LeftShiftReleased()
 {
 	//Shift Released 시 Walking 됨.
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-	CLog::Print("Released", 2, 1.f);
+	CLog::Print("Shift Released", 2, 1.f);
 }
 
-void ACPlayableCharacterBase::OnMoveState()
+void ACPlayableCharacterBase::MovementModeChangedBind(ACharacter* InCharacter, EMovementMode InPrevMovementMode, uint8 InPrevCustomMovementMode)
 {
+	EMovementMode newMovementMode = InCharacter->GetCharacterMovement()->MovementMode;
+
+	switch (newMovementMode)
+	{
+	case MOVE_None: break;
+	case MOVE_Walking: OnMoveStateChanged(); break;
+	case MOVE_NavWalking: break;
+	case MOVE_Falling: OnMoveStateChanged(); break;
+	case MOVE_Swimming: break;
+	case MOVE_Flying: break;
+	case MOVE_Custom: break;
+	case MOVE_MAX: break;
+	default: break;
+	}
+}
+
+void ACPlayableCharacterBase::OnMoveStateChanged()
+{
+	if (GetCharacterMovement()->IsFalling())
+	{
+		StateComponent->SetState(EPlayableCharacterState::Jumping);
+		return;
+	}
+
+	if (!bMove)
+	{
+		StateComponent->SetState(EPlayableCharacterState::Idle);
+		return;
+	}
+
 	float speed = GetCharacterMovement()->MaxWalkSpeed;
 
 	if (UKismetMathLibrary::NearlyEqual_FloatFloat(speed, WalkingSpeed, 1.f))
@@ -257,17 +288,17 @@ void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterSt
 
 void ACPlayableCharacterBase::SetWalkingMode()
 {
-	CLog::Print("Walking Mode Call", 4, 1.f, FColor::Red);
+	//CLog::Print("Walking Mode Call", 4, 1.f, FColor::Red);
 }
 
 void ACPlayableCharacterBase::SetRunningMode()
 {
-	CLog::Print("Running Mode Call", 4, 1.f, FColor::Red);
+	//CLog::Print("Running Mode Call", 4, 1.f, FColor::Red);
 }
 
 void ACPlayableCharacterBase::Test_Implementation()
 {
-	CLog::Print("TestSuccess");
+	//CLog::Print("TestSuccess");
 }
 
 void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey InKey)
