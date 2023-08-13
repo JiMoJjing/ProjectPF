@@ -15,6 +15,7 @@
 #include "InputMappingContext.h"
 
 #include "Character/ActorComponents/CStateComponent.h"
+#include "Character/ActorComponents/CStatusComponent.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Character/CharacterDataAssets/CDA_CharacterBase.h"
@@ -79,6 +80,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	//ActorComponent
 	{
 		StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
+		StatusComponent = CreateDefaultSubobject<UCStatusComponent>("StatusComponent");
 	}
 
 }
@@ -298,7 +300,7 @@ void ACPlayableCharacterBase::SetRunningMode()
 
 void ACPlayableCharacterBase::Test_Implementation()
 {
-	//CLog::Print("TestSuccess");
+	CLog::Print("TestSuccess", 3, 0.005f);
 }
 
 void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey InKey)

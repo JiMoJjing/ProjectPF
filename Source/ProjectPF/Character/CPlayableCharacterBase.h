@@ -47,6 +47,10 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCStateComponent* StateComponent;
 
+	/** CStatusComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCStatusComponent* StatusComponent;
+
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
 		class UCDA_CharacterBase* CharacterBaseDataAsset;
