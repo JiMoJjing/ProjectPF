@@ -13,7 +13,7 @@ enum class EPlayableCharacterClass : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FStatusDataTableStruct : public FTableRowBase
+struct FStatusDataTable : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 

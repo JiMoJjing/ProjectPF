@@ -21,10 +21,15 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	
-public:
+
+private:
 	// Data 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FStatusDataTableStruct StatusData;
+	UPROPERTY(EditDefaultsOnly)
+		FStatusDataTable StatusData;
+
+public:
+	UFUNCTION(BlueprintPure)
+		FStatusDataTable GetStatusData() const { return StatusData; }
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

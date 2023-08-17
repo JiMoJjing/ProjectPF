@@ -16,6 +16,8 @@
 
 #include "Character/ActorComponents/CStateComponent.h"
 #include "Character/ActorComponents/CStatusComponent.h"
+#include "Character/ActorComponents/CLevelComponent.h"
+#include "Character/ActorComponents/Status/CHpComponent.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Character/CharacterDataAssets/CDA_CharacterBase.h"
@@ -81,6 +83,8 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	{
 		StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
 		StatusComponent = CreateDefaultSubobject<UCStatusComponent>("StatusComponent");
+		LevelComponent = CreateDefaultSubobject<UCLevelComponent>("LevelComponent");
+		HpComponent = CreateDefaultSubobject<UCHpComponent>("HpComponent");
 	}
 
 }
@@ -115,6 +119,11 @@ void ACPlayableCharacterBase::BeginPlay()
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+
+	//Status ÃÊ±âÈ­
+	{
+		HpComponent->SetBaseHpMax(StatusComponent->GetStatusData().HpMax);
+	}
 
 	/*
 	if (IICharacter* interfacetest = Cast<IICharacter>(this))
@@ -224,14 +233,14 @@ void ACPlayableCharacterBase::LeftShiftPressed()
 {
 	//Shift Pressed ½Ã Running µÊ.
 	GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
-	CLog::Print("Shift Pressed", 2, 1.f);
+	CLog::Print("Shift Pressed", 0, 1.f);
 }
 
 void ACPlayableCharacterBase::LeftShiftReleased()
 {
 	//Shift Released ½Ã Walking µÊ.
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-	CLog::Print("Shift Released", 2, 1.f);
+	CLog::Print("Shift Released", 0, 1.f);
 }
 
 void ACPlayableCharacterBase::MovementModeChangedBind(ACharacter* InCharacter, EMovementMode InPrevMovementMode, uint8 InPrevCustomMovementMode)

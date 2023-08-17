@@ -14,14 +14,13 @@ void UCStatusComponent::BeginPlay()
 	{
 		CLog::Print("StatusDataTable Load Success");
 
-		TArray<FStatusDataTableStruct*> StatusDatas;
-		StatusDataTable->GetAllRows<FStatusDataTableStruct>(TEXT("GetAllRows"), StatusDatas);
+		TArray<FStatusDataTable*> StatusDatas;
+		StatusDataTable->GetAllRows<FStatusDataTable>(TEXT("GetAllRows"), StatusDatas);
 		for (auto data : StatusDatas)
 		{
 			if (data->PlayerClass == PlayerClass)
 			{
 				StatusData = *data;
-				CLog::Print(StatusData.Attack);
 				break;
 			}
 		}
