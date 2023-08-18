@@ -6,6 +6,8 @@
 #include "Character/ICharacter.h"
 #include "CPlayableCharacterBase.generated.h"
 
+DECLARE_EVENT(ACPlayableCharacterBase, FMoveEvent);
+
 UCLASS()
 class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharacter
 {
@@ -67,10 +69,6 @@ protected:
 	/** Bind Key Change */
 	UFUNCTION(BlueprintCallable)
 		void ChangeBindingAction(class UInputAction* InAction, FKey InKey);
-
-	/** MovementMode Changed Delegate Binding Function*/
-	UFUNCTION(BlueprintCallable)
-		void MovementModeChangedBind(ACharacter* InCharacter, EMovementMode InPrevMovementMode, uint8 InPrevCustomMovementMode);
 public:
 	ACPlayableCharacterBase();	
 
@@ -98,9 +96,6 @@ protected:
 	void LeftShiftPressed();
 	void LeftShiftReleased();
 
-	/** Move 일 때 Walking 인지 Running 인지 체크해서 SetState(CStateComponent) 할 함수 */
-	void OnMoveStateChanged();
-
 	/** State가 Walking이 되면 델리게이트로 실행 될 함수 */
 	virtual void SetWalkingMode() override;
 
@@ -117,7 +112,15 @@ public:
 	/** WalkingSpeed와 RunningSpeed 인데 Status Component로 이식 할 것 */
 	float WalkingSpeed = 200.f;
 	float RunningSpeed = 600.f;
-	bool bMove = false;
+	bool bMoving = false;
+
+/** DECLARE_EVENT */
+public:
+	FMoveEvent& OnMoveEvent() { return MoveEvent; }
+private:
+	FMoveEvent MoveEvent;
+	
+//==================================================
 
 protected:
 	virtual void BeginPlay() override;

@@ -114,8 +114,6 @@ void ACPlayableCharacterBase::BeginPlay()
 	{
 		if(IsValid(StateComponent))
 			StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
-
-		MovementModeChangedDelegate.AddDynamic(this, &ACPlayableCharacterBase::MovementModeChangedBind);
 	}
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
@@ -194,9 +192,10 @@ void ACPlayableCharacterBase::Move(const FInputActionValue& Value)
 
 	//내가 추가한 코드
 	{
-		OnMoveStateChanged();
-		if (!bMove)
-			bMove = true;
+		if (!bMoving)
+			bMoving = true;
+		if (MoveEvent.IsBound())
+			MoveEvent.Broadcast();
 	}
 }
 
@@ -220,8 +219,10 @@ void ACPlayableCharacterBase::MoveStart()
 
 void ACPlayableCharacterBase::MoveEnd()
 {
-	bMove = false;
-	OnMoveStateChanged();
+	bMoving = false;
+
+	if (MoveEvent.IsBound())
+		MoveEvent.Broadcast();
 }
 
 void ACPlayableCharacterBase::LeftMouseClick()
@@ -241,46 +242,6 @@ void ACPlayableCharacterBase::LeftShiftReleased()
 	//Shift Released 시 Walking 됨.
 	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 	CLog::Print("Shift Released", 0, 1.f);
-}
-
-void ACPlayableCharacterBase::MovementModeChangedBind(ACharacter* InCharacter, EMovementMode InPrevMovementMode, uint8 InPrevCustomMovementMode)
-{
-	EMovementMode newMovementMode = InCharacter->GetCharacterMovement()->MovementMode;
-
-	switch (newMovementMode)
-	{
-	case MOVE_None: break;
-	case MOVE_Walking: OnMoveStateChanged(); break;
-	case MOVE_NavWalking: break;
-	case MOVE_Falling: OnMoveStateChanged(); break;
-	case MOVE_Swimming: break;
-	case MOVE_Flying: break;
-	case MOVE_Custom: break;
-	case MOVE_MAX: break;
-	default: break;
-	}
-}
-
-void ACPlayableCharacterBase::OnMoveStateChanged()
-{
-	if (GetCharacterMovement()->IsFalling())
-	{
-		StateComponent->SetState(EPlayableCharacterState::Jumping);
-		return;
-	}
-
-	if (!bMove)
-	{
-		StateComponent->SetState(EPlayableCharacterState::Idle);
-		return;
-	}
-
-	float speed = GetCharacterMovement()->MaxWalkSpeed;
-
-	if (UKismetMathLibrary::NearlyEqual_FloatFloat(speed, WalkingSpeed, 1.f))
-		StateComponent->SetState(EPlayableCharacterState::Walking);
-	else if (UKismetMathLibrary::NearlyEqual_FloatFloat(speed, RunningSpeed, 1.f))
-		StateComponent->SetState(EPlayableCharacterState::Running);
 }
 
 void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState)

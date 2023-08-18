@@ -30,6 +30,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetState(EPlayableCharacterState InState);
 
+	UFUNCTION(BlueprintCallable)
+		void StateCheck();
+	
+	UFUNCTION(BlueprintCallable)
+		void MovementModeChangedBind(ACharacter* InCharacter, EMovementMode InPrevMovementMode, uint8 InPrevCustomMovementMode);
 public:
 	UPROPERTY(BlueprintAssignable)
 		FPlayableCharacterStateChanged OnStateChanged;
