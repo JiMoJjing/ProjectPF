@@ -35,9 +35,9 @@ struct FStatusDataTable : public FTableRowBase
 
 	//Attack
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float Attack;
+		float Offense;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float AttackPerLv;
+		float OffensePerLv;
 
 	//Defense
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

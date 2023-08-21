@@ -18,6 +18,10 @@
 #include "Character/ActorComponents/CStatusComponent.h"
 #include "Character/ActorComponents/CLevelComponent.h"
 #include "Character/ActorComponents/Status/CHpComponent.h"
+#include "Character/ActorComponents/Status/CMpComponent.h"
+#include "Character/ActorComponents/Status/COffenseComponent.h"
+#include "Character/ActorComponents/Status/CDefenseComponent.h"
+#include "Character/ActorComponents/Status/CSpeedComponent.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Character/CharacterDataAssets/CDA_CharacterBase.h"
@@ -85,6 +89,10 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 		StatusComponent = CreateDefaultSubobject<UCStatusComponent>("StatusComponent");
 		LevelComponent = CreateDefaultSubobject<UCLevelComponent>("LevelComponent");
 		HpComponent = CreateDefaultSubobject<UCHpComponent>("HpComponent");
+		MpComponent = CreateDefaultSubobject<UCMpComponent>("MpComponent");
+		OffenseComponent = CreateDefaultSubobject<UCOffenseComponent>("OffenseComponent");
+		DefenseComponent = CreateDefaultSubobject<UCDefenseComponent>("DefenseComponent");
+		SpeedComponent = CreateDefaultSubobject<UCSpeedComponent>("SpeedComponent");
 	}
 
 }
@@ -115,18 +123,6 @@ void ACPlayableCharacterBase::BeginPlay()
 		if(IsValid(StateComponent))
 			StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
 	}
-
-	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
-
-	//Status ÃÊ±âÈ­
-	{
-		HpComponent->SetBaseHpMax(StatusComponent->GetStatusData().HpMax);
-	}
-
-	/*
-	if (IICharacter* interfacetest = Cast<IICharacter>(this))
-		interfacetest->Test_Implementation();
-	*/
 }
 
 void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -148,7 +144,7 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::Look);
 
 		//LeftMouseClick
-		EnhancedInputComponent->BindAction(LeftMouseClickAction, ETriggerEvent::Triggered, this, &ACPlayableCharacterBase::LeftMouseClick);
+		EnhancedInputComponent->BindAction(LeftMouseClickAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::LeftMouseClick);
 
 		//LeftShift
 		EnhancedInputComponent->BindAction(LeftShiftAction, ETriggerEvent::Started, this, &ACPlayableCharacterBase::LeftShiftPressed);
@@ -228,19 +224,20 @@ void ACPlayableCharacterBase::MoveEnd()
 void ACPlayableCharacterBase::LeftMouseClick()
 {
 	//CLog::Print("Left Mouse Clicked!", 0, 5.f);
+	LevelComponent->AddExp(7);
 }
 
 void ACPlayableCharacterBase::LeftShiftPressed()
 {
 	//Shift Pressed ½Ã Running µÊ.
-	GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = SpeedComponent->GetFinalRunSpeed();
 	CLog::Print("Shift Pressed", 0, 1.f);
 }
 
 void ACPlayableCharacterBase::LeftShiftReleased()
 {
 	//Shift Released ½Ã Walking µÊ.
-	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = SpeedComponent->GetFinalWalkSpeed();
 	CLog::Print("Shift Released", 0, 1.f);
 }
 

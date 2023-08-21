@@ -1,0 +1,44 @@
+[
+	{
+		"Name": "Warrior",
+		"PlayerClass": "Warrior",
+		"HpMax": 100,
+		"HpMaxPerLv": 10,
+		"MpMax": 50,
+		"MpMaxPerLv": 5,
+		"Offense": 10,
+		"OffensePerLv": 2,
+		"Defense": 10,
+		"DefensePerLv": 2,
+		"WalkSpeed": 200,
+		"RunSpeed": 600
+	},
+	{
+		"Name": "Mage",
+		"PlayerClass": "Mage",
+		"HpMax": 50,
+		"HpMaxPerLv": 5,
+		"MpMax": 100,
+		"MpMaxPerLv": 5,
+		"Offense": 10,
+		"OffensePerLv": 2,
+		"Defense": 10,
+		"DefensePerLv": 2,
+		"WalkSpeed": 200,
+		"RunSpeed": 600
+	},
+	{
+		"Name": "Gunner",
+		"PlayerClass": "Gunner",
+		"HpMax": 75,
+		"HpMaxPerLv": 7.5,
+		"MpMax": 75,
+		"MpMaxPerLv": 5,
+		"Offense": 10,
+		"OffensePerLv": 2,
+		"Defense": 10,
+		"DefensePerLv": 2,
+		"WalkSpeed": 200,
+		"RunSpeed": 600
+	}
+]

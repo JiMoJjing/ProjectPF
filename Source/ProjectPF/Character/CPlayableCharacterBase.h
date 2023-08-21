@@ -49,17 +49,33 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCStateComponent* StateComponent;
 
-	/** CLevelComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCLevelComponent* LevelComponent;
-
 	/** CStatusComponent*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCStatusComponent* StatusComponent;
 
+	/** CLevelComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCLevelComponent* LevelComponent;
+
 	/** CHpComponent*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCHpComponent* HpComponent;
+
+	/** CMpComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCMpComponent* MpComponent;
+
+	/** COffenseComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCOffenseComponent* OffenseComponent;
+
+	/** CDefenseComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCDefenseComponent* DefenseComponent;
+
+	/** CSpeedComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCSpeedComponent* SpeedComponent;
 
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
@@ -109,9 +125,6 @@ protected:
 	virtual void Test_Implementation() override;
 
 public:
-	/** WalkingSpeed와 RunningSpeed 인데 Status Component로 이식 할 것 */
-	float WalkingSpeed = 200.f;
-	float RunningSpeed = 600.f;
 	bool bMoving = false;
 
 /** DECLARE_EVENT */

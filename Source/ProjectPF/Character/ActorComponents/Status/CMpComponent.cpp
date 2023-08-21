@@ -1,20 +1,20 @@
 
-#include "Character/ActorComponents/Status/CHpComponent.h"
+#include "Character/ActorComponents/Status/CMpComponent.h"
 #include "Character/CPlayableCharacterBase.h"
 
 #include "Character/ActorComponents/CStatusComponent.h"
 #include "Character/ActorComponents/CLevelComponent.h"
 #include "Global.h"
 
-UCHpComponent::UCHpComponent()
+UCMpComponent::UCMpComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UCHpComponent::BeginPlay()
+void UCMpComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	OwnerCharacter = Cast<ACPlayableCharacterBase>(GetOwner());
 	//UCStatusComponent* StatusComponent = OwnerCharacter->FindComponentByClass<UCStatusComponent>();
 	//UCStatusComponent* StatusComponent = Cast<UCStatusComponent>(OwnerCharacter->GetComponentByClass(UCStatusComponent::StaticClass()));
@@ -27,8 +27,8 @@ void UCHpComponent::BeginPlay()
 			FStatusDataTable data;
 			data = StatusComponent->GetStatusData();
 
-			SetBaseHpMax(data.HpMax);
-			SetHpMaxPerLv(data.HpMaxPerLv);
+			SetBaseMpMax(data.MpMax);
+			SetMpMaxPerLv(data.MpMaxPerLv);
 		}
 	}
 	// LevelComponent
@@ -36,49 +36,46 @@ void UCHpComponent::BeginPlay()
 		UCLevelComponent* LevelComponent = CHelpers::GetComponent<UCLevelComponent>(OwnerCharacter);
 		if (LevelComponent)
 		{
-			LevelComponent->OnLevelUp.AddDynamic(this, &UCHpComponent::SetLevel);
-			//레벨 초기화
+			LevelComponent->OnLevelUp.AddDynamic(this, &UCMpComponent::SetLevel);
 			Level = LevelComponent->GetLevel();
 		}
 	}
 
 	// 초기화
-	SetFinalHpMax();
-	NowHp = FinalHpMax;
+	SetFinalMpMax();
+	NowMp = FinalMpMax;
 }
 
-void UCHpComponent::SetLevel(int32 inLevel)
+void UCMpComponent::SetLevel(int32 inLevel)
 {
 	Level = inLevel;
-	SetFinalHpMax();
+	SetFinalMpMax();
 }
 
-void UCHpComponent::SetAddedHpMax()
+void UCMpComponent::SetAddedMpMax()
 {
 
 }
 
-void UCHpComponent::SetFinalHpMax()
+void UCMpComponent::SetFinalMpMax()
 {
-	FinalHpMax = BaseHpMax;
-	FinalHpMax += HpMaxPerLv * Level;
-	FinalHpMax += AddedHpMax;
+	FinalMpMax = BaseMpMax;
+	FinalMpMax += MpMaxPerLv * Level;
+	FinalMpMax += AddedMpMax;
 }
 
-void UCHpComponent::SetNowHp(float InFloat)
+void UCMpComponent::SetNowMp(float InFloat)
 {
 
 }
 
 
 
-void UCHpComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCMpComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	FString n = "HpMax : ";
-	n += FString::SanitizeFloat((double)FinalHpMax);
-	CLog::Print(n, 3, 0.001f, FColor::Green);
+
+	FString n = "MpMax : ";
+	n += FString::SanitizeFloat((double)FinalMpMax);
+	CLog::Print(n, 4, 0.001f, FColor::Green);
 }
-
-
-

@@ -1,20 +1,20 @@
 
-#include "Character/ActorComponents/Status/CHpComponent.h"
+#include "Character/ActorComponents/Status/CDefenseComponent.h"
 #include "Character/CPlayableCharacterBase.h"
 
 #include "Character/ActorComponents/CStatusComponent.h"
 #include "Character/ActorComponents/CLevelComponent.h"
 #include "Global.h"
 
-UCHpComponent::UCHpComponent()
+UCDefenseComponent::UCDefenseComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UCHpComponent::BeginPlay()
+void UCDefenseComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	OwnerCharacter = Cast<ACPlayableCharacterBase>(GetOwner());
 	//UCStatusComponent* StatusComponent = OwnerCharacter->FindComponentByClass<UCStatusComponent>();
 	//UCStatusComponent* StatusComponent = Cast<UCStatusComponent>(OwnerCharacter->GetComponentByClass(UCStatusComponent::StaticClass()));
@@ -27,8 +27,8 @@ void UCHpComponent::BeginPlay()
 			FStatusDataTable data;
 			data = StatusComponent->GetStatusData();
 
-			SetBaseHpMax(data.HpMax);
-			SetHpMaxPerLv(data.HpMaxPerLv);
+			SetBaseDefense(data.Defense);
+			SetDefensePerLv(data.DefensePerLv);
 		}
 	}
 	// LevelComponent
@@ -36,49 +36,38 @@ void UCHpComponent::BeginPlay()
 		UCLevelComponent* LevelComponent = CHelpers::GetComponent<UCLevelComponent>(OwnerCharacter);
 		if (LevelComponent)
 		{
-			LevelComponent->OnLevelUp.AddDynamic(this, &UCHpComponent::SetLevel);
-			//레벨 초기화
+			LevelComponent->OnLevelUp.AddDynamic(this, &UCDefenseComponent::SetLevel);
 			Level = LevelComponent->GetLevel();
 		}
 	}
 
 	// 초기화
-	SetFinalHpMax();
-	NowHp = FinalHpMax;
+	SetFinalDefense();
 }
 
-void UCHpComponent::SetLevel(int32 inLevel)
+void UCDefenseComponent::SetLevel(int32 inLevel)
 {
 	Level = inLevel;
-	SetFinalHpMax();
+	SetFinalDefense();
 }
 
-void UCHpComponent::SetAddedHpMax()
+void UCDefenseComponent::SetAddedDefense()
 {
 
 }
 
-void UCHpComponent::SetFinalHpMax()
+void UCDefenseComponent::SetFinalDefense()
 {
-	FinalHpMax = BaseHpMax;
-	FinalHpMax += HpMaxPerLv * Level;
-	FinalHpMax += AddedHpMax;
-}
-
-void UCHpComponent::SetNowHp(float InFloat)
-{
-
+	FinalDefense = BaseDefense;
+	FinalDefense += DefensePerLv * Level;
+	FinalDefense += AddedDefense;
 }
 
 
-
-void UCHpComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCDefenseComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	FString n = "HpMax : ";
-	n += FString::SanitizeFloat((double)FinalHpMax);
-	CLog::Print(n, 3, 0.001f, FColor::Green);
+	FString n = "Defense : ";
+	n += FString::SanitizeFloat((double)FinalDefense);
+	CLog::Print(n, 6, 0.001f, FColor::Green);
 }
-
-
-
