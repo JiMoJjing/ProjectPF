@@ -71,6 +71,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RunSpeed")
 		void SetFinalRunSpeed();
 
+	/** DELEGATE ¿ë ÇÔ¼ö */
+	UFUNCTION(BlueprintCallable)
+		void BindRunActionPressed();
+	UFUNCTION(BlueprintCallable)
+		void BindRunActionReleased();
+
 private:
 	class ACPlayableCharacterBase* OwnerCharacter;
 

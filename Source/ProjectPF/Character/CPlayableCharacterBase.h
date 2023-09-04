@@ -8,6 +8,9 @@
 
 DECLARE_EVENT(ACPlayableCharacterBase, FMoveEvent);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRunActionPressed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRunActionReleased);
+
 UCLASS()
 class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharacter
 {
@@ -43,39 +46,39 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 
 	/** LeftShift Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* LeftShiftAction;
+		class UInputAction* RunAction;
 
 	/** CStateComponent */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCStateComponent* StateComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCStateComponent* StateComponent;*/
 
 	/** CStatusComponent*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCStatusComponent* StatusComponent;
 
 	/** CLevelComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCLevelComponent* LevelComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCLevelComponent* LevelComponent;*/
 
 	/** CHpComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCHpComponent* HpComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCHpComponent* HpComponent;*/
 
 	/** CMpComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCMpComponent* MpComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCMpComponent* MpComponent;*/
 
 	/** COffenseComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCOffenseComponent* OffenseComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCOffenseComponent* OffenseComponent;*/
 
 	/** CDefenseComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCDefenseComponent* DefenseComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCDefenseComponent* DefenseComponent;*/
 
 	/** CSpeedComponent*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCSpeedComponent* SpeedComponent;
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCSpeedComponent* SpeedComponent;*/
 
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
@@ -106,21 +109,11 @@ protected:
 	virtual void Look(const FInputActionValue& Value) override;
 
 	/** LeftMouseClick 입력 액션시 호출 */
-	virtual void LeftMouseClick() override;
+	virtual void LeftMouseClick();
 
-	/** LeftShift 입력 액션시 호출 */
-	void LeftShiftPressed();
-	void LeftShiftReleased();
-
-	/** State가 Walking이 되면 델리게이트로 실행 될 함수 */
-	virtual void SetWalkingMode() override;
-
-	/** State가 Running이 되면 델리게이트로 실행 될 함수 */
-	virtual void SetRunningMode() override;
-
-	/** State의 델리게이트에 바인딩 할 함수 */
-	virtual void OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState) override;
-
+	/** RunAction 입력 액션시 호출 */
+	void RunActionPressed();
+	void RunActionReleased();
 
 	virtual void Test_Implementation() override;
 
@@ -134,6 +127,15 @@ private:
 	FMoveEvent MoveEvent;
 	
 //==================================================
+
+/** DELEGATE */
+public:
+	UPROPERTY(BlueprintAssignable)
+		FRunActionPressed OnRunActionPressed;
+
+	UPROPERTY(BlueprintAssignable)
+		FRunActionReleased OnRunActionReleased;
+
 
 protected:
 	virtual void BeginPlay() override;

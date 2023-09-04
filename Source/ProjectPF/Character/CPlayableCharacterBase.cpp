@@ -85,16 +85,15 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 
 	//ActorComponent
 	{
-		StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
+		//StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
 		StatusComponent = CreateDefaultSubobject<UCStatusComponent>("StatusComponent");
-		LevelComponent = CreateDefaultSubobject<UCLevelComponent>("LevelComponent");
-		HpComponent = CreateDefaultSubobject<UCHpComponent>("HpComponent");
-		MpComponent = CreateDefaultSubobject<UCMpComponent>("MpComponent");
-		OffenseComponent = CreateDefaultSubobject<UCOffenseComponent>("OffenseComponent");
-		DefenseComponent = CreateDefaultSubobject<UCDefenseComponent>("DefenseComponent");
-		SpeedComponent = CreateDefaultSubobject<UCSpeedComponent>("SpeedComponent");
+		//LevelComponent = CreateDefaultSubobject<UCLevelComponent>("LevelComponent");
+		//HpComponent = CreateDefaultSubobject<UCHpComponent>("HpComponent");
+		//MpComponent = CreateDefaultSubobject<UCMpComponent>("MpComponent");
+		//OffenseComponent = CreateDefaultSubobject<UCOffenseComponent>("OffenseComponent");
+		//DefenseComponent = CreateDefaultSubobject<UCDefenseComponent>("DefenseComponent");
+		//SpeedComponent = CreateDefaultSubobject<UCSpeedComponent>("SpeedComponent");
 	}
-
 }
 
 void ACPlayableCharacterBase::BeginPlay()
@@ -120,8 +119,7 @@ void ACPlayableCharacterBase::BeginPlay()
 
 	//DELEGATE Binding
 	{
-		if(IsValid(StateComponent))
-			StateComponent->OnStateChanged.AddDynamic(this, &ACPlayableCharacterBase::OnStateChanged);
+		
 	}
 }
 
@@ -147,8 +145,8 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 		EnhancedInputComponent->BindAction(LeftMouseClickAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::LeftMouseClick);
 
 		//LeftShift
-		EnhancedInputComponent->BindAction(LeftShiftAction, ETriggerEvent::Started, this, &ACPlayableCharacterBase::LeftShiftPressed);
-		EnhancedInputComponent->BindAction(LeftShiftAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::LeftShiftReleased);
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Started, this, &ACPlayableCharacterBase::RunActionPressed);
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Completed, this, &ACPlayableCharacterBase::RunActionReleased);
 	}
 }
 
@@ -223,47 +221,21 @@ void ACPlayableCharacterBase::MoveEnd()
 
 void ACPlayableCharacterBase::LeftMouseClick()
 {
-	//CLog::Print("Left Mouse Clicked!", 0, 5.f);
-	LevelComponent->AddExp(7);
+	CLog::Print("Left Mouse Clicked!", 0, 1.f);
 }
 
-void ACPlayableCharacterBase::LeftShiftPressed()
+void ACPlayableCharacterBase::RunActionPressed()
 {
-	//Shift Pressed ½Ã Running µÊ.
-	GetCharacterMovement()->MaxWalkSpeed = SpeedComponent->GetFinalRunSpeed();
-	CLog::Print("Shift Pressed", 0, 1.f);
+	if (OnRunActionPressed.IsBound())
+		OnRunActionPressed.Broadcast();
 }
 
-void ACPlayableCharacterBase::LeftShiftReleased()
+void ACPlayableCharacterBase::RunActionReleased()
 {
-	//Shift Released ½Ã Walking µÊ.
-	GetCharacterMovement()->MaxWalkSpeed = SpeedComponent->GetFinalWalkSpeed();
-	CLog::Print("Shift Released", 0, 1.f);
+	if (OnRunActionReleased.IsBound())
+		OnRunActionReleased.Broadcast();
 }
 
-void ACPlayableCharacterBase::OnStateChanged_Implementation(EPlayableCharacterState InPrevState, EPlayableCharacterState InNewState)
-{
-	switch (InNewState)
-	{
-	case EPlayableCharacterState::Idle: break;
-	case EPlayableCharacterState::Walking: SetWalkingMode(); break;
-	case EPlayableCharacterState::Running: SetRunningMode(); break;
-	case EPlayableCharacterState::Jumping: break;
-	case EPlayableCharacterState::Attacking: break;
-	case EPlayableCharacterState::Casting: break;
-	default: break;
-	}
-}
-
-void ACPlayableCharacterBase::SetWalkingMode()
-{
-	//CLog::Print("Walking Mode Call", 4, 1.f, FColor::Red);
-}
-
-void ACPlayableCharacterBase::SetRunningMode()
-{
-	//CLog::Print("Running Mode Call", 4, 1.f, FColor::Red);
-}
 
 void ACPlayableCharacterBase::Test_Implementation()
 {

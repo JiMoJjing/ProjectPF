@@ -32,12 +32,13 @@ void UCSpeedComponent::BeginPlay()
 			SetBaseRunSpeed(data.RunSpeed);
 		}
 	}
+	OwnerCharacter->OnRunActionPressed.AddDynamic(this, &UCSpeedComponent::BindRunActionPressed);
+	OwnerCharacter->OnRunActionReleased.AddDynamic(this, &UCSpeedComponent::BindRunActionReleased);
 
 	SetFinalWalkSpeed();
 	SetFinalRunSpeed();
 
 	OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = FinalWalkSpeed;
-
 }
 
 void UCSpeedComponent::SetAddedWalkSpeed()
@@ -56,6 +57,18 @@ void UCSpeedComponent::SetAddedRunSpeed()
 void UCSpeedComponent::SetFinalRunSpeed()
 {
 	FinalRunSpeed = BaseRunSpeed + AddedRunSpeed;
+}
+
+void UCSpeedComponent::BindRunActionPressed()
+{
+	if (IsValid(OwnerCharacter))
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = FinalRunSpeed;
+}
+
+void UCSpeedComponent::BindRunActionReleased()
+{
+	if (IsValid(OwnerCharacter))
+		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = FinalWalkSpeed;
 }
 
 
