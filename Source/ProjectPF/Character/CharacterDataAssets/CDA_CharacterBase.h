@@ -34,7 +34,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AnimInstance")
 		TSubclassOf<UAnimInstance> AnimInstanceClass;
 
-
+	void BeginPlay(class ACharacter* InOwnerCharacter);
 };
 
 //USTRUCT(BlueprintType)

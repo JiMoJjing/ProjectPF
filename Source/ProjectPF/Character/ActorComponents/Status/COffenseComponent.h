@@ -24,20 +24,20 @@ public:
 
 private:
 	//플레이어의 기본 Offense
-	UPROPERTY(EditDefaultsOnly, Category = "Offense")
+	UPROPERTY(VisibleAnywhere, Category = "Offense")
 		float BaseOffense;
 	// Lv당 상승 Offense
-	UPROPERTY(EditDefaultsOnly, Category = "Offense")
+	UPROPERTY(VisibleAnywhere, Category = "Offense")
 		float OffensePerLv;
 	//장비나 버프로 인한 Offense 상승량 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Offense")
+	UPROPERTY(VisibleAnywhere, Category = "Offense")
 		float AddedOffense = 0.f;
 	//Base + Added 합쳐 최종 Offense 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Offense")
+	UPROPERTY(VisibleAnywhere, Category = "Offense")
 		float FinalOffense;
 
 	//현재 Level
-	UPROPERTY(EditDefaultsOnly, Category = "Level")
+	UPROPERTY(VisibleAnywhere, Category = "Level")
 		int32 Level;
 
 

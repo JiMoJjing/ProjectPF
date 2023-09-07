@@ -30,23 +30,23 @@ public:
 
 private:
 	//플레이어의 기본 Mp Max
-	UPROPERTY(EditDefaultsOnly, Category = "Mp")
+	UPROPERTY(VisibleAnywhere, Category = "Mp")
 		float BaseMpMax;
 	// Lv당 상승 Mp Max
-	UPROPERTY(EditDefaultsOnly, Category = "Mp")
+	UPROPERTY(VisibleAnywhere, Category = "Mp")
 		float MpMaxPerLv;
 	//장비나 버프로 인한 Mp, MP Max 상승량 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Mp")
+	UPROPERTY(VisibleAnywhere, Category = "Mp")
 		float AddedMpMax = 0.f;
 	//Base + Added 합쳐 최종 Mp Max 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Mp")
+	UPROPERTY(VisibleAnywhere, Category = "Mp")
 		float FinalMpMax;
 	//현재 Mp, MP
-	UPROPERTY(EditDefaultsOnly, Category = "Mp")
+	UPROPERTY(VisibleAnywhere, Category = "Mp")
 		float NowMp;
 
 	//현재 Level
-	UPROPERTY(EditDefaultsOnly, Category = "Level")
+	UPROPERTY(VisibleAnywhere, Category = "Level")
 		int32 Level;
 
 

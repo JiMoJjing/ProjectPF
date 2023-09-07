@@ -24,20 +24,20 @@ public:
 
 private:
 	//플레이어의 기본 Defense
-	UPROPERTY(EditDefaultsOnly, Category = "Defense")
+	UPROPERTY(VisibleAnywhere, Category = "Defense")
 		float BaseDefense;
 	// Lv당 상승 Defense
-	UPROPERTY(EditDefaultsOnly, Category = "Defense")
+	UPROPERTY(VisibleAnywhere, Category = "Defense")
 		float DefensePerLv;
 	//장비나 버프로 인한 Defense 상승량 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Defense")
+	UPROPERTY(VisibleAnywhere, Category = "Defense")
 		float AddedDefense = 0.f;
 	//Base + Added 합쳐 최종 Defense 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Defense")
+	UPROPERTY(VisibleAnywhere, Category = "Defense")
 		float FinalDefense;
 
 	//현재 Level
-	UPROPERTY(EditDefaultsOnly, Category = "Level")
+	UPROPERTY(VisibleAnywhere, Category = "Level")
 		int32 Level;
 
 

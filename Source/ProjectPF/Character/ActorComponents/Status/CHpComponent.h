@@ -30,23 +30,23 @@ public:
 
 private:
 	//플레이어의 기본 Hp Max
-	UPROPERTY(EditDefaultsOnly, Category = "Hp")
+	UPROPERTY(VisibleAnywhere, Category = "Hp")
 		float BaseHpMax;
 	// Lv당 상승 Hp Max
-	UPROPERTY(EditDefaultsOnly, Category = "Hp")
+	UPROPERTY(VisibleAnywhere, Category = "Hp")
 		float HpMaxPerLv;
 	//장비나 버프로 인한 HP, MP Max 상승량 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Hp")
+	UPROPERTY(VisibleAnywhere, Category = "Hp")
 		float AddedHpMax = 0.f;
 	//Base + Added 합쳐 최종 HP Max 관리
-	UPROPERTY(EditDefaultsOnly, Category = "Hp")
+	UPROPERTY(VisibleAnywhere, Category = "Hp")
 		float FinalHpMax;
 	//현재 HP, MP
-	UPROPERTY(EditDefaultsOnly, Category = "Hp")
+	UPROPERTY(VisibleAnywhere, Category = "Hp")
 		float NowHp;
 
 	//현재 Level
-	UPROPERTY(EditDefaultsOnly, Category = "Level")
+	UPROPERTY(VisibleAnywhere, Category = "Level")
 		int32 Level;
 
 

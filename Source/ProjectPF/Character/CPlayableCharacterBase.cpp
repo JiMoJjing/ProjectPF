@@ -17,6 +17,7 @@
 #include "Character/ActorComponents/CStateComponent.h"
 #include "Character/ActorComponents/CStatusComponent.h"
 #include "Character/ActorComponents/CLevelComponent.h"
+#include "Character/ActorComponents/CBasicAttackComponent.h"
 #include "Character/ActorComponents/Status/CHpComponent.h"
 #include "Character/ActorComponents/Status/CMpComponent.h"
 #include "Character/ActorComponents/Status/COffenseComponent.h"
@@ -85,14 +86,15 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 
 	//ActorComponent
 	{
-		//StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
+		StateComponent = CreateDefaultSubobject<UCStateComponent>("StateComponent");
 		StatusComponent = CreateDefaultSubobject<UCStatusComponent>("StatusComponent");
-		//LevelComponent = CreateDefaultSubobject<UCLevelComponent>("LevelComponent");
-		//HpComponent = CreateDefaultSubobject<UCHpComponent>("HpComponent");
-		//MpComponent = CreateDefaultSubobject<UCMpComponent>("MpComponent");
-		//OffenseComponent = CreateDefaultSubobject<UCOffenseComponent>("OffenseComponent");
-		//DefenseComponent = CreateDefaultSubobject<UCDefenseComponent>("DefenseComponent");
-		//SpeedComponent = CreateDefaultSubobject<UCSpeedComponent>("SpeedComponent");
+		LevelComponent = CreateDefaultSubobject<UCLevelComponent>("LevelComponent");
+		BasicAttackComponent = CreateDefaultSubobject<UCBasicAttackComponent>("BasicAttackComponent");
+		HpComponent = CreateDefaultSubobject<UCHpComponent>("HpComponent");
+		MpComponent = CreateDefaultSubobject<UCMpComponent>("MpComponent");
+		OffenseComponent = CreateDefaultSubobject<UCOffenseComponent>("OffenseComponent");
+		DefenseComponent = CreateDefaultSubobject<UCDefenseComponent>("DefenseComponent");
+		SpeedComponent = CreateDefaultSubobject<UCSpeedComponent>("SpeedComponent");
 	}
 }
 
@@ -221,7 +223,7 @@ void ACPlayableCharacterBase::MoveEnd()
 
 void ACPlayableCharacterBase::LeftMouseClick()
 {
-	CLog::Print("Left Mouse Clicked!", 0, 1.f);
+	BasicAttackComponent->DoAttack();
 }
 
 void ACPlayableCharacterBase::RunActionPressed()

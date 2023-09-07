@@ -33,23 +33,23 @@ public:
 
 private:
 	//플레이어의 기본 WalkSpeed
-	UPROPERTY(EditDefaultsOnly, Category = "WalkSpeed")
+	UPROPERTY(VisibleAnywhere, Category = "WalkSpeed")
 		float BaseWalkSpeed;
 	//장비나 버프로 인한 WalkSpeed 상승량 관리
-	UPROPERTY(EditDefaultsOnly, Category = "WalkSpeed")
+	UPROPERTY(VisibleAnywhere, Category = "WalkSpeed")
 		float AddedWalkSpeed = 0.f;
 	//Base + Added 합쳐 최종 WalkSpeed 관리
-	UPROPERTY(EditDefaultsOnly, Category = "WalkSpeed")
+	UPROPERTY(VisibleAnywhere, Category = "WalkSpeed")
 		float FinalWalkSpeed;
 
 	//플레이어의 기본 RunSpeed
-	UPROPERTY(EditDefaultsOnly, Category = "RunSpeed")
+	UPROPERTY(VisibleAnywhere, Category = "RunSpeed")
 		float BaseRunSpeed;
 	//장비나 버프로 인한 RunSpeed 상승량 관리
-	UPROPERTY(EditDefaultsOnly, Category = "RunSpeed")
+	UPROPERTY(VisibleAnywhere, Category = "RunSpeed")
 		float AddedRunSpeed = 0.f;
 	//Base + Added 합쳐 최종 RunSpeed 관리
-	UPROPERTY(EditDefaultsOnly, Category = "RunSpeed")
+	UPROPERTY(VisibleAnywhere, Category = "RunSpeed")
 		float FinalRunSpeed;
 
 public:

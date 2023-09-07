@@ -365,3 +365,6 @@ FodyWeavers.xsd
 # Personal Ignore
 Intermediate/*
 Saved/*
+Content/ParagonLtBelica/*
+Content/ParagonMurdock/*
+Content/UE4_Action/*

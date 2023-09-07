@@ -49,36 +49,40 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 		class UInputAction* RunAction;
 
 	/** CStateComponent */
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCStateComponent* StateComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCStateComponent* StateComponent;
 
 	/** CStatusComponent*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCStatusComponent* StatusComponent;
 
 	/** CLevelComponent*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCLevelComponent* LevelComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCLevelComponent* LevelComponent;
 
 	/** CHpComponent*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCHpComponent* HpComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCHpComponent* HpComponent;
 
 	/** CMpComponent*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCMpComponent* MpComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCMpComponent* MpComponent;
 
 	/** COffenseComponent*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCOffenseComponent* OffenseComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCOffenseComponent* OffenseComponent;
 
 	/** CDefenseComponent*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCDefenseComponent* DefenseComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCDefenseComponent* DefenseComponent;
 
 	/** CSpeedComponent*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
-		class UCSpeedComponent* SpeedComponent;*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCSpeedComponent* SpeedComponent;
+
+	/** CBasicAttackComponent*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCBasicAttackComponent* BasicAttackComponent;
 
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
