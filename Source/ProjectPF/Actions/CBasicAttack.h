@@ -31,6 +31,10 @@ protected:
 		class ACharacter* OwnerCharacter;
 	UPROPERTY(BlueprintReadOnly)
 		class UCStateComponent* StateComponent;
+	UPROPERTY(BlueprintReadOnly)
+		class UCWeaponComponent* WeaponComponent;
 
+
+	//class ACWeapon* Weapon;
 	TArray<FBasicAttackData> Datas;
 };

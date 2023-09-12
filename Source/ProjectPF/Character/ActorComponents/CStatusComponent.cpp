@@ -12,8 +12,6 @@ void UCStatusComponent::BeginPlay()
 	Super::BeginPlay();
 	if (IsValid(StatusDataTable))
 	{
-		CLog::Print("StatusDataTable Load Success");
-
 		TArray<FStatusDataTable*> StatusDatas;
 		StatusDataTable->GetAllRows<FStatusDataTable>(TEXT("GetAllRows"), StatusDatas);
 		for (auto data : StatusDatas)

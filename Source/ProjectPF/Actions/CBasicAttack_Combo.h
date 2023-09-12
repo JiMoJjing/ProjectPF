@@ -19,9 +19,21 @@ public:
 	void EnableCombo();
 	void DisableCombo();
 
+	void TraceStart();
+	void TraceEnd();
+
+	UFUNCTION(BlueprintCallable)
+		void Trace();
+
 private:
 	uint32 ComboIndex = 0;
 
 	bool bComboEnabled = false;
 	bool bComboStart = false;
+
+	UPROPERTY()
+		TArray<AActor*> HittedActors;
+
+	UPROPERTY()
+		FHitResult Result;
 };

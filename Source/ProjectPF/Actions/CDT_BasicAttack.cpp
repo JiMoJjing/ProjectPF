@@ -17,5 +17,4 @@ void UCDT_BasicAttack::BeginPlay(ACharacter* InOwnerCharacter)
 		BasicAttackActor->SetDatas(BasicAttackDatas);
 		UGameplayStatics::FinishSpawningActor(BasicAttackActor, transform);
 	}
-	CLog::Print("DT_BasicAttack BeginPlay Called");
 }
