@@ -23,6 +23,7 @@
 #include "Character/ActorComponents/Status/COffenseComponent.h"
 #include "Character/ActorComponents/Status/CDefenseComponent.h"
 #include "Character/ActorComponents/Status/CSpeedComponent.h"
+#include "Character/ActorComponents/CWeaponComponent.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Character/CharacterDataAssets/CDA_CharacterBase.h"
@@ -58,7 +59,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 500.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->bDoCollisionTest = false;
 
@@ -96,6 +97,7 @@ ACPlayableCharacterBase::ACPlayableCharacterBase()
 		OffenseComponent = CreateDefaultSubobject<UCOffenseComponent>("OffenseComponent");
 		DefenseComponent = CreateDefaultSubobject<UCDefenseComponent>("DefenseComponent");
 		SpeedComponent = CreateDefaultSubobject<UCSpeedComponent>("SpeedComponent");
+		WeaponComponent = CreateDefaultSubobject<UCWeaponComponent>("WeaponComponent");
 	}
 }
 
@@ -109,6 +111,7 @@ void ACPlayableCharacterBase::BeginPlay()
 		GetMesh()->SetSkeletalMeshAsset(CharacterBaseDataAsset->SkeletalMesh);
 		GetMesh()->SetRelativeTransform(CharacterBaseDataAsset->Mesh);
 		GetMesh()->SetAnimInstanceClass(CharacterBaseDataAsset->AnimInstanceClass);
+		AddTickPrerequisiteComponent(GetMesh());
 	}
 
 	//Add Input Mapping Context
@@ -155,6 +158,8 @@ void ACPlayableCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 void ACPlayableCharacterBase::Jump()
 {
+	if (!bCanMove)
+		return;
 	bPressedJump = true;
 	JumpKeyHoldTime = 0.0f;
 }
@@ -167,6 +172,10 @@ void ACPlayableCharacterBase::StopJumping()
 
 void ACPlayableCharacterBase::Move(const FInputActionValue& Value)
 {
+	// bCanMoveüũ
+	if (!bCanMove)
+		return;
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -243,6 +252,23 @@ void ACPlayableCharacterBase::RunActionReleased()
 void ACPlayableCharacterBase::Test_Implementation()
 {
 	CLog::Print("TestSuccess", 3, 0.005f);
+}
+
+void ACPlayableCharacterBase::MoveForwardXY(float InSpeed)
+{
+	FVector forwardVector = GetActorForwardVector().GetSafeNormal2D();
+	float speed = GetWorld()->GetDeltaSeconds() * InSpeed;
+	AddActorWorldOffset(forwardVector * speed, true);
+}
+
+void ACPlayableCharacterBase::SetCharacterRotationYaw()
+{
+	float controlrotationYaw = GetBaseAimRotation().Yaw;
+	FRotator rotation = GetActorRotation();
+
+	rotation.Yaw = controlrotationYaw;
+
+	SetActorRotation(rotation);
 }
 
 void ACPlayableCharacterBase::ChangeBindingAction(UInputAction* InAction, FKey InKey)

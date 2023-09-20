@@ -84,6 +84,10 @@ class PROJECTPF_API ACPlayableCharacterBase : public ACharacter, public IICharac
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
 		class UCBasicAttackComponent* BasicAttackComponent;
 
+	// CWeaponComponent
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ActorComponents", meta = (AllowPrivateAccess = "true"))
+		class UCWeaponComponent* WeaponComponent;
+
 	/** DataAsset */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DataAssets", meta = (AllowPrivateAccess = "true"))
 		class UCDA_CharacterBase* CharacterBaseDataAsset;
@@ -119,10 +123,27 @@ protected:
 	void RunActionPressed();
 	void RunActionReleased();
 
+
 	virtual void Test_Implementation() override;
 
 public:
+	// bMoving Getter
+	bool GetbMoving() { return bMoving; }
+
+	// bCanMove Getter, Setter
+	void SetbCanMove(bool InBool) { bCanMove = InBool; }
+	bool GetbCanMove() { return bCanMove; }
+
+	// MoveForward XY
+	void MoveForwardXY(float InSpeed);
+
+	void SetCharacterRotationYaw();
+
+private:
+	// 현재 움직이고 있는지의 bool 변수
 	bool bMoving = false;
+	// 현재 Move가 가능한지 불가능한지 설정하는 bool 변수
+	bool bCanMove = true;
 
 /** DECLARE_EVENT */
 public:

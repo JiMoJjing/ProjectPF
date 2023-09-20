@@ -28,7 +28,7 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-		class ACharacter* OwnerCharacter;
+		class ACPlayableCharacterBase* OwnerCharacter;
 	UPROPERTY(BlueprintReadOnly)
 		class UCStateComponent* StateComponent;
 	UPROPERTY(BlueprintReadOnly)

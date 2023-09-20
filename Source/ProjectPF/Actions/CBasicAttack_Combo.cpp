@@ -1,5 +1,6 @@
 #include "Actions/CBasicAttack_Combo.h"
 #include "GameFramework/Character.h"
+#include "Character/CPlayableCharacterBase.h"
 #include "Character/ActorComponents/CStateComponent.h"
 #include "Character/ActorComponents/CWeaponComponent.h"
 
@@ -28,7 +29,9 @@ void ACBasicAttack_Combo::DoAttack()
 	StateComponent->SetState(EPlayableCharacterState::Attacking);
 	// ComboIndex에 맞는 Data를 읽어와서 몽타주 실행
 	const FBasicAttackData& data = Datas[ComboIndex];
+	OwnerCharacter->SetbCanMove(data.bCanMove);
 	OwnerCharacter->PlayAnimMontage(data.AnimMontage, data.PlayRatio, data.StartSection);
+	OwnerCharacter->SetCharacterRotationYaw();
 }
 
 void ACBasicAttack_Combo::Begin_DoAttack()
@@ -44,7 +47,9 @@ void ACBasicAttack_Combo::Begin_DoAttack()
 	OwnerCharacter->StopAnimMontage();
 	// ComboIndex에 맞는 Data를 읽어와서 몽타주 실행
 	const FBasicAttackData& data = Datas[ComboIndex];
+	OwnerCharacter->SetbCanMove(data.bCanMove);
 	OwnerCharacter->PlayAnimMontage(data.AnimMontage, data.PlayRatio, data.StartSection);
+	OwnerCharacter->SetCharacterRotationYaw();
 }
 
 void ACBasicAttack_Combo::End_DoAttack()
@@ -54,6 +59,7 @@ void ACBasicAttack_Combo::End_DoAttack()
 	ComboIndex = 0;
 	OwnerCharacter->StopAnimMontage();
 	StateComponent->SetState(EPlayableCharacterState::Idle);
+	OwnerCharacter->SetbCanMove(true);
 }
 
 void ACBasicAttack_Combo::EnableCombo()
@@ -107,4 +113,15 @@ void ACBasicAttack_Combo::Trace()
 		HittedActors.AddUnique(Result.GetActor());
 	}
 
+}
+
+void ACBasicAttack_Combo::SetCharacterRotationYaw()
+{
+	float controlrotationYaw = OwnerCharacter->GetBaseAimRotation().Yaw;
+	FRotator rotation = OwnerCharacter->GetActorRotation();
+
+	//float finalrotationYaw = UKismetMathLibrary::FInterpTo(rotation.Yaw, controlrotationYaw, OwnerCharacter->GetWorld()->GetDeltaSeconds(), 1.f);
+	rotation.Yaw = controlrotationYaw;
+
+	OwnerCharacter->SetActorRotation(rotation);
 }

@@ -43,13 +43,16 @@ void UCStateComponent::SetState(EPlayableCharacterState InState)
 
 void UCStateComponent::StateCheck()
 {
+	if (IsState(EPlayableCharacterState::Attacking))
+		return;
+
 	if (OwnerCharacter->GetCharacterMovement()->IsFalling())
 	{
 		SetState(EPlayableCharacterState::Jumping);
 		return;
 	}
 
-	if (!(OwnerCharacter->bMoving))
+	if (!(OwnerCharacter->GetbMoving()))
 	{
 		SetState(EPlayableCharacterState::Idle);
 		return;
